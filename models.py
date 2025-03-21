@@ -151,4 +151,26 @@ class LocalMarket(Base):
     longitude = Column(Float)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
+    is_active = Column(Boolean, default=True)
+
+class Heritage(Base):
+    __tablename__ = "heritage_sites"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    description = Column(Text, nullable=False)
+    period = Column(String, nullable=False)
+    highlight = Column(String, nullable=False)
+    schedule = Column(String, nullable=False)
+    open_days = Column(String, nullable=False)
+    image = Column(String, nullable=False)
+    address = Column(String, nullable=False)
+    google_maps_url = Column(String, nullable=False)
+    latitude = Column(Float)
+    longitude = Column(Float)
+    entrance_fee = Column(String)
+    accessibility = Column(String)
+    guided_tours = Column(Boolean, default=False)
+    created_at = Column(DateTime, server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
     is_active = Column(Boolean, default=True) 

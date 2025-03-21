@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine
 import models
-from routers import categories, reviews, users, food, playas, restaurants, markets
+from routers import categories, reviews, users, food, playas, restaurants, markets, heritage
 
 # Crear las tablas en la base de datos
 models.Base.metadata.create_all(bind=engine)
@@ -30,6 +30,7 @@ app.include_router(categories.router, prefix="/api/v1/categories", tags=["catego
 app.include_router(reviews.router, prefix="/api/v1/reviews", tags=["reviews"])
 app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
 app.include_router(markets.router, prefix="/api/v1/markets", tags=["markets"])
+app.include_router(heritage.router, prefix="/api/v1/heritage", tags=["heritage"])
 
 @app.get("/")
 async def root():
