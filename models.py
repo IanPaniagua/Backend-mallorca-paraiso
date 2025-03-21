@@ -63,6 +63,27 @@ class Food(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
     is_active = Column(Boolean, default=True)
 
+class Restaurant(Base):
+    __tablename__ = "restaurants"
+
+    id = Column(Integer, primary_key=True, index=True)
+    nombre = Column(String(100), nullable=False)
+    ubicacion = Column(String(100))
+    especialidad = Column(String(100))
+    precio = Column(String(10))  # "€", "€€", "€€€", "€€€€"
+    reserva = Column(Boolean, default=False)
+    url = Column(String(255))
+    tipo = Column(String(50))
+    descripcion = Column(Text)
+    horario = Column(String(255))
+    telefono = Column(String(20))
+    imagen = Column(String(255))
+    latitud = Column(Float)
+    longitud = Column(Float)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    is_active = Column(Boolean, default=True)
+
 class Category(Base):
     __tablename__ = "categories"
 
