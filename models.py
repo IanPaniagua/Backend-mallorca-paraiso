@@ -133,4 +133,22 @@ class User(Base):
     hashed_password = Column(String)
     full_name = Column(String)
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.utcnow) 
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class LocalMarket(Base):
+    __tablename__ = "local_markets"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    location = Column(String, nullable=False)
+    address = Column(String, nullable=False)
+    google_maps_url = Column(String, nullable=False)
+    days = Column(String, nullable=False)
+    hours = Column(String, nullable=False)
+    description = Column(Text)
+    image = Column(String)
+    latitude = Column(Float)
+    longitude = Column(Float)
+    created_at = Column(DateTime, server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
+    is_active = Column(Boolean, default=True) 
