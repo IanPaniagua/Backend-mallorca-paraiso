@@ -18,17 +18,17 @@ class Beach(Base):
     __tablename__ = "beaches"
 
     id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String(100), nullable=False)
-    descripcion = Column(Text)
-    imagen = Column(String(255))
-    zona = Column(String(100))
-    pueblo = Column(String(100))
-    tipo = Column(String(50))
-    servicios = Column(Text)  # Almacenado como string separado por comas
-    acceso = Column(String(100))
-    destacado = Column(Boolean, default=False)
-    latitud = Column(Float)
-    longitud = Column(Float)
+    name = Column(String(100), nullable=False)
+    image = Column(String(255))
+    description = Column(Text)
+    region = Column(String(100))
+    town = Column(String(100))
+    type = Column(String(50))
+    services = Column(Text)  # Stored as comma-separated string
+    access = Column(String(100))
+    featured = Column(Boolean, default=False)
+    latitude = Column(Float)
+    longitude = Column(Float)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
     is_active = Column(Boolean, default=True)
