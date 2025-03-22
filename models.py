@@ -1,8 +1,9 @@
-from sqlalchemy import Column, Integer, String, Float, Text, ForeignKey, DateTime, Boolean, Table
+from sqlalchemy import Column, Integer, String, Float, Text, ForeignKey, DateTime, Boolean, Table, Enum
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from datetime import datetime
+import enum
 
 Base = declarative_base()
 
@@ -14,24 +15,71 @@ category_association = Table(
     Column('category_id', Integer, ForeignKey('categories.id'))
 )
 
+class LocalityType(str, enum.Enum):
+    PUEBLO = "pueblo"
+    CIUDAD = "ciudad"
+    PUERTO = "puerto"
+
+class Zone(Base):
+    __tablename__ = "zones"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False, unique=True)  # Norte, Sur, Este, Oeste, Centro
+    description = Column(Text)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    is_active = Column(Boolean, default=True)
+
+    # Relationships
+    localities = relationship("Locality", back_populates="zone")
+
+class Locality(Base):
+    __tablename__ = "localities"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    type = Column(Enum(LocalityType), nullable=False)
+    zone_id = Column(Integer, ForeignKey("zones.id"), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    is_active = Column(Boolean, default=True)
+
+    # Relationships
+    zone = relationship("Zone", back_populates="localities")
+    beaches = relationship("Beach", back_populates="locality")
+    restaurants = relationship("Restaurant", back_populates="locality")
+
+class CoastalLocationType(str, enum.Enum):
+    PLAYA = "playa"
+    CALA = "cala"
+    PUERTO = "puerto"
+
+class BeachType(str, enum.Enum):
+    ARENA = "arena"
+    ROCA = "roca"
+    MIXTA = "mixta"
+
 class Beach(Base):
     __tablename__ = "beaches"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(100), nullable=False)
-    image = Column(String(255))
-    description = Column(Text)
-    region = Column(String(100))
-    town = Column(String(100))
-    type = Column(String(50))
-    services = Column(Text)  # Stored as comma-separated string
-    access = Column(String(100))
+    name = Column(String, nullable=False)
+    image = Column(String)
+    description = Column(Text, nullable=False)
+    category = Column(Enum(CoastalLocationType), nullable=False)
+    type = Column(Enum(BeachType), nullable=False)
+    services = Column(String)
+    access = Column(String, nullable=False)
     featured = Column(Boolean, default=False)
     latitude = Column(Float)
     longitude = Column(Float)
+    locality_id = Column(Integer, ForeignKey("localities.id"), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
     is_active = Column(Boolean, default=True)
+
+    # Relationships
+    locality = relationship("Locality", back_populates="beaches")
 
 class Monument(Base):
     __tablename__ = "monuments"
@@ -67,19 +115,19 @@ class Restaurant(Base):
     __tablename__ = "restaurants"
 
     id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String(100), nullable=False)
-    ubicacion = Column(String(100))
-    especialidad = Column(String(100))
-    precio = Column(String(10))  # "€", "€€", "€€€", "€€€€"
-    reserva = Column(Boolean, default=False)
-    url = Column(String(255))
-    tipo = Column(String(50))
-    descripcion = Column(Text)
-    horario = Column(String(255))
-    telefono = Column(String(20))
-    imagen = Column(String(255))
-    latitud = Column(Float)
-    longitud = Column(Float)
+    name = Column(String, nullable=False)
+    image = Column(String)
+    description = Column(Text)
+    type = Column(String, nullable=False)
+    price_range = Column(String, nullable=False)
+    cuisine_type = Column(String, nullable=False)
+    reservations = Column(Boolean, default=False)
+    website = Column(String)
+    phone = Column(String)
+    locality_id = Column(Integer, ForeignKey("localities.id"), nullable=False)
+    locality = relationship("Locality", back_populates="restaurants")
+    latitude = Column(Float)
+    longitude = Column(Float)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
     is_active = Column(Boolean, default=True)
